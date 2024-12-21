@@ -1,4 +1,4 @@
-module Deku.VikeProps.Iso where
+module Deku.Vike.Props.Iso where
 
 import Prelude
 
@@ -9,8 +9,8 @@ import Data.Map as DM
 import Data.Maybe (Maybe(..))
 import Data.Nullable (toMaybe, toNullable)
 import Data.Tuple (Tuple(..))
-import Deku.Vike.VikeProps as VP
-import Deku.Vike.VikeProps.JS as VP.JS
+import Deku.Vike.Props as VP
+import Deku.Vike.Props.JS as VP.JS
 import Foreign.Object as FO
 
 pageContextToPageContextJS

@@ -1,15 +1,13 @@
-module Deku.Vike.VikeProps.JS where
+module Deku.Vike.Props.JS where
 
 import Data.Nullable (Nullable)
 import Data.Newtype (class Newtype)
 
-
 import Deku.DOM (HTMLHyperlinkElementUtils, HTMLElement)
-
 
 import Foreign.Object (Object)
 import Type.Proxy (Proxy)
-import Deku.Vike.VikeProps as VP
+import Deku.Vike.Props as VP
 
 newtype UrlParsed = UrlParsed
   { pathname :: String
@@ -25,7 +23,6 @@ newtype UrlParsed = UrlParsed
   , hostname :: Nullable String
   , port :: Nullable String
   }
-
 
 type VikeAnchorElement (r :: Row Type) =
   ( __tag :: Proxy "VikeAnchorElement"
@@ -46,11 +43,14 @@ type VikeAnchorElement (r :: Row Type) =
   | HTMLHyperlinkElementUtils (HTMLElement r)
   )
 
-
-newtype PreviousPageContext :: Row Type ->  Type
-newtype PreviousPageContext record  = 
-    PreviousPageContext (forall path data'. VP.PreviousPageContextSignature path record data' => Proxy path -> Nullable (PageContext data' record) )
-
+newtype PreviousPageContext :: Row Type -> Type
+newtype PreviousPageContext record =
+  PreviousPageContext
+    ( forall path data'
+       . VP.PreviousPageContextSignature path record data'
+      => Proxy path
+      -> Nullable (PageContext data' record)
+    )
 
 newtype PageContext :: Type -> Row Type -> Type
 newtype PageContext a r = PageContext
@@ -62,12 +62,15 @@ newtype PageContext a r = PageContext
   , headersOriginal :: Array (Array String)
   , isHydration :: Boolean
   , isClientSideNavigation :: Boolean
-  , previousPageContext  :: PreviousPageContext r
+  , previousPageContext :: PreviousPageContext r
   }
 
 derive instance Newtype (PageContext a r) _
 
 newtype VikeProps a r = VikeProps
-  { pageContext :: PageContext a r, clientOnly :: VP.ClientOnly, nav :: VP.Nav r }
+  { pageContext :: PageContext a r
+  , clientOnly :: VP.ClientOnly
+  , nav :: VP.Nav r
+  }
 
 derive instance Newtype (VikeProps a r) _

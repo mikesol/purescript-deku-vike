@@ -1,4 +1,4 @@
-module Deku.Path where
+module Deku.Vike.Path where
 
 import Prelude
 
@@ -6,8 +6,7 @@ import Data.Either (Either(..))
 import Data.List ((:), List(..))
 import Data.Symbol (class IsSymbol, reflectSymbol)
 import Data.Tuple (Tuple)
-import Deku.Core (Nut)
-import Deku.Vike.VikeProps (VikeProps)
+import Deku.Vike.Spec (VikeSpec)
 import Effect.Aff (Aff)
 import Parsing (ParseError(..), Position(..))
 import Prim.Row as Rw
@@ -118,25 +117,26 @@ instance
   ( CC.Parse path ParsePath Unit (R.Success (PathSegment seg) "") Unit
   , PathSegmentsToDataFunctionSignature seg ({ | r } -> Aff a)
   ) =>
-  PathToVike path (Tuple ({ | r } -> Aff a) (VikeProps a -> Nut))
+  PathToVike path (Tuple ({ | r } -> Aff a) (VikeSpec a r))
 
 testPathToVike :: forall @path @vike. PathToVike path vike => Unit
 testPathToVike = unit
 
 testPathToVike0 =
-  testPathToVike @"/" @(Tuple ({} -> Aff String) (VikeProps String -> Nut))
+  testPathToVike @"/" @(Tuple ({} -> Aff String) (VikeSpec String ()))
     :: Unit
 
 testPathToVike1 =
-  testPathToVike @"/" @(Tuple ({} -> Aff Int) (VikeProps Int -> Nut)) :: Unit
+  testPathToVike @"/" @(Tuple ({} -> Aff Int) (VikeSpec Int ())) :: Unit
 
 testPathToVike2 =
-  testPathToVike @"/foo/bar" @(Tuple ({} -> Aff Int) (VikeProps Int -> Nut))
+  testPathToVike @"/foo/bar" @(Tuple ({} -> Aff Int) (VikeSpec Int ()))
     :: Unit
 
 testPathToVike3 =
   testPathToVike @"/foo/bar/:baz"
-    @(Tuple ({ baz :: String } -> Aff Int) (VikeProps Int -> Nut)) :: Unit
+    @(Tuple ({ baz :: String } -> Aff Int) (VikeSpec Int (baz :: String)))
+    :: Unit
 
 class PathSegmentsToRecord :: Type -> Row Type -> Constraint
 class PathSegmentsToRecord pathSegment record | pathSegment -> record where

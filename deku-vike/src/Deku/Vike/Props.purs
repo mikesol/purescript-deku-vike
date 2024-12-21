@@ -1,4 +1,4 @@
-module Deku.Vike.VikeProps where
+module Deku.Vike.Props where
 
 import Data.List (List)
 import Data.Map (Map)
@@ -59,7 +59,8 @@ newtype ClientNav record =
     ( forall path
        . ClientNavSignature path record
       => { | record }
-      -> Proxy path -> AnchorSignature
+      -> Proxy path
+      -> AnchorSignature
     )
 
 class ServerNavSignature :: Symbol -> Row Type -> Type -> Constraint
@@ -70,7 +71,8 @@ newtype ServerNav record =
   ServerNav
     ( forall path data'
        . ServerNavSignature path record data'
-      => Proxy path -> Poll data'
+      => Proxy path
+      -> Poll data'
       -> { | record }
       -> AnchorSignature
     )
@@ -85,7 +87,8 @@ newtype PreviousPageContext record =
   PreviousPageContext
     ( forall path data'
        . PreviousPageContextSignature path record data'
-      => Proxy path -> Maybe (PageContext data' record)
+      => Proxy path
+      -> Maybe (PageContext data' record)
     )
 
 newtype Nav r = Nav
