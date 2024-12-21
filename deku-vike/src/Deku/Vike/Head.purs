@@ -44,6 +44,7 @@ newtype Head = Head
   , base :: Maybe Base
   , meta :: Array { name :: Maybe String, content :: String }
   , charset :: Maybe String
+  , style :: Array String
   , viewport :: Maybe String
   , otherTags :: Array String
   }
@@ -163,6 +164,11 @@ headToString (Head h) =
       Just b -> baseToString b
       Nothing -> ""
 
+    styleTags = case h.style of
+      [] -> ""
+      styles -> "<style>\n" <> joinWith "\n" styles <> "\n</style>"
+
+
     scriptTags = foldMap scriptToString h.scripts
     linkTags = foldMap linkToString h.links
     metaTags = foldMap metaToString h.meta
@@ -176,6 +182,7 @@ headToString (Head h) =
       baseTag <> "\n" <>
       linkTags <> "\n" <>
       metaTags <> "\n" <>
+      styleTags <> "\n" <>
       scriptTags <> "\n" <>
       otherTagStrings <>
     "\n</head>"
