@@ -56,10 +56,10 @@ class ClientNavSignature path record
 
 newtype ClientNav record =
   ClientNav
-    ( forall @path
+    ( forall path
        . ClientNavSignature path record
       => { | record }
-      -> AnchorSignature
+      -> Proxy path -> AnchorSignature
     )
 
 class ServerNavSignature :: Symbol -> Row Type -> Type -> Constraint
@@ -68,9 +68,9 @@ class ServerNavSignature path record data' | path record -> data'
 newtype ServerNav :: Row Type -> Type
 newtype ServerNav record =
   ServerNav
-    ( forall @path data'
+    ( forall path data'
        . ServerNavSignature path record data'
-      => Poll data'
+      => Proxy path -> Poll data'
       -> { | record }
       -> AnchorSignature
     )
@@ -83,9 +83,9 @@ class
 newtype PreviousPageContext :: Row Type -> Type
 newtype PreviousPageContext record =
   PreviousPageContext
-    ( forall @path data'
+    ( forall path data'
        . PreviousPageContextSignature path record data'
-      => Maybe (PageContext data' record)
+      => Proxy path -> Maybe (PageContext data' record)
     )
 
 newtype Nav r = Nav
@@ -109,9 +109,8 @@ newtype PageContext a r = PageContext
   }
 
 derive instance Newtype (PageContext a r) _
-newtype ClientOnly = ClientOnly (Nut -> Nut)
+type ClientOnly = Nut -> Nut
 
-derive instance Newtype ClientOnly _
 newtype VikeProps a r = VikeProps
   { pageContext :: PageContext a r
   , clientOnly :: ClientOnly

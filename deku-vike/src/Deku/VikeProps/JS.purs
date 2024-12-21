@@ -2,11 +2,11 @@ module Deku.Vike.VikeProps.JS where
 
 import Data.Nullable (Nullable)
 import Data.Newtype (class Newtype)
-import Deku.Attribute (Attribute) as Deku.Attribute
-import Deku.Core (Nut)
+
+
 import Deku.DOM (HTMLHyperlinkElementUtils, HTMLElement)
-import FRP.Poll (Poll)
-import FRP.Poll as FRP.Poll
+
+
 import Foreign.Object (Object)
 import Type.Proxy (Proxy)
 import Deku.Vike.VikeProps as VP
@@ -46,30 +46,11 @@ type VikeAnchorElement (r :: Row Type) =
   | HTMLHyperlinkElementUtils (HTMLElement r)
   )
 
-type AnchorSignature =
-  Array (FRP.Poll.Poll (Deku.Attribute.Attribute (VikeAnchorElement ())))
-  -> Array Nut
-  -> Nut
-
-newtype ClientNav record = 
-    ClientNav (forall @path. VP.ClientNavSignature path record => { | record } -> AnchorSignature)
-
-newtype ServerNav :: Row Type ->  Type
-newtype ServerNav record  = 
-    ServerNav (forall @path data'. VP.ServerNavSignature path record data' => Poll data' -> { | record } -> AnchorSignature)
-
 
 newtype PreviousPageContext :: Row Type ->  Type
 newtype PreviousPageContext record  = 
-    PreviousPageContext (forall @path data'. VP.PreviousPageContextSignature path record data' => Nullable (PageContext data' record) )
+    PreviousPageContext (forall path data'. VP.PreviousPageContextSignature path record data' => Proxy path -> Nullable (PageContext data' record) )
 
-
-newtype Nav r = Nav
-  { server :: ServerNav r
-  , client :: ClientNav r
-  }
-
-derive instance Newtype (Nav r) _
 
 newtype PageContext :: Type -> Row Type -> Type
 newtype PageContext a r = PageContext
@@ -85,10 +66,8 @@ newtype PageContext a r = PageContext
   }
 
 derive instance Newtype (PageContext a r) _
-newtype ClientOnly = ClientOnly (Nut -> Nut)
 
-derive instance Newtype ClientOnly _
 newtype VikeProps a r = VikeProps
-  { pageContext :: PageContext a r, clientOnly :: ClientOnly, nav :: Nav r }
+  { pageContext :: PageContext a r, clientOnly :: VP.ClientOnly, nav :: VP.Nav r }
 
 derive instance Newtype (VikeProps a r) _
