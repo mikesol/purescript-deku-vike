@@ -133,7 +133,7 @@ workspace:
         - hyrule
         - untagged-union
         - web-pointerevents
-        - web-toucheventshb ns dxcv bnf vhgyvh bjn mjn jnlm m /'";;;;;;;;76t fv'
+        - web-touchevents
         - web-uievents
     deku-css:
       git: "https://github.com/mikesol/purescript-deku.git"
@@ -141,4 +141,3 @@ workspace:
       ref: "276f48adde3d9354f61917f7e9ae2ae7b43df6b2"
       dependencies:
         - css
-p-[lkgh,kl h,.mk,m./ klkoi98]
