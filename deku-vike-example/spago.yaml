@@ -1,0 +1,12 @@
+package:
+  name: deku-vike-example
+  dependencies:
+  - deku-vike
+  - deku-core
+  - deku-dom
+  - deku-css
+  - hyrule
+  - web-html
+  - web-uievents
+  - web-pointerevents
+  - web-touchevents
